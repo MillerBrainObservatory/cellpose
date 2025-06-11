@@ -18,6 +18,7 @@ denoise_logger = logging.getLogger(__name__)
 from cellpose import transforms, utils, io
 from cellpose.core import run_net
 from cellpose.models import CellposeModel, model_path, normalize_default, assign_device
+from cellpose.resnet_torch import CPnet 
 
 MODEL_NAMES = []
 for ctype in ["cyto3", "cyto2", "nuclei"]:
@@ -462,7 +463,7 @@ def one_chan_cellpose(device, model_type="cyto2", pretrained_model=None):
         pretrained_model = None
     nbase = [32, 64, 128, 256]
     nchan = 1
-    net1 = resnet_torch.CPnet([nchan, *nbase], nout=3, sz=3).to(device)
+    net1 = CPnet([nchan, *nbase], nout=3, sz=3).to(device)
     filename = model_path(model_type,
                           0) if pretrained_model is None else pretrained_model
     weights = torch.load(filename, weights_only=True)
